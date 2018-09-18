@@ -340,7 +340,7 @@ namespace freefallsolveeom {
         /*!
             CSVファイル出力用の0判定用の定数
         */
-        static auto constexpr ZERODECISIONTOCSV = 1.0E-7;
+        static auto constexpr ZERODECISIONTOCSV = 1.0E-10;
 
         //! A private static member variable (constant).
         /*!

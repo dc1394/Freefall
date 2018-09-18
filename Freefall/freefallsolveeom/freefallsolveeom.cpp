@@ -53,7 +53,7 @@ namespace freefallsolveeom {
         l2divm2northlatitude45_(sqr(sqr(FreefallSolveEom::R0 + h0) * 2.0 * pi<double>() / (24.0 * 60.0 * 60.0)) * std::cos(pi<double>() * 0.25)),
         m_(m),
         ode_solver_type_(ode_solver_type),
-        outputtocsvdigits_(std::to_string(static_cast<std::int32_t>(std::ceil(std::log10(tintervaloutputcsv) <= -1.0 ? -std::log10(tintervaloutputcsv) : 1.0)))),
+        outputtocsvdigits_(std::to_string(tintervaloutputcsv > 0.1 ? 1 : static_cast<std::int32_t>(std::ceil(-std::log10(tintervaloutputcsv))))),
         r_(r),
         spherevolume_(4.0 / 3.0 * boost::math::constants::pi<double>() * r * r * r),
         spline_pressure_(nullptr, gsl_spline_deleter),

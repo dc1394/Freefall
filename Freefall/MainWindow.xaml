@@ -1,0 +1,447 @@
+﻿<Window Closed="MainWindow_Closed"
+        Height="650"
+        Icon="Images/Freefall.ico"
+        Loaded="MainWindow_Loaded"
+        ResizeMode="CanMinimize"
+        Title="Freefall - 実行待機中" 
+        Width="1600"
+        WindowStartupLocation="CenterScreen"
+        x:Class="Freefall.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:local="clr-namespace:Freefall"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/MyStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <!-- [ファイル]-[終了]用コマンド -->
+        <CommandBinding Command="ApplicationCommands.Close" Executed="MainWindowClosed"/>
+
+        <!-- [設定]-[設定]用コマンド -->
+        <CommandBinding Command="Properties" Executed="ApplicationSettinged"/>
+
+        <!-- [ヘルプ]-[バージョン情報]用コマンド -->
+        <CommandBinding Command="ApplicationCommands.Help" Executed="ApplicationVersioned"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <!-- Ctrl + Cに[終了]を割り当てる -->
+        <KeyBinding Command="ApplicationCommands.Close" 
+                    Key="C"
+                    Modifiers="Control" />
+
+        <!-- Ctrl + Tに[設定]を割り当てる -->
+        <KeyBinding Command="Properties" 
+                    Key="T"
+                    Modifiers="Control" />
+
+        <!-- Ctrl + Aに[バージョン情報]を割り当てる -->
+        <KeyBinding Command="Properties" 
+                    Key="A"
+                    Modifiers="Control" />
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.Resources>
+            <local:StringToBooleanConverter x:Key="StrConverter"/>
+
+            <Style BasedOn="{StaticResource MyTextBox}"
+                   TargetType="TextBox"
+                   x:Key="AlphabetTextBoxStyle">
+                <Setter Property="InputMethod.IsInputMethodEnabled" Value="False" />
+            </Style>
+
+            <!-- Notice the defined Style -->
+            <ToolTip x:Key="AltitudeValidationErrorTooltip" Style="{StaticResource ErrorTooltipSyle}" />
+            <ToolTip x:Key="DiameterValidationErrorTooltip" Style="{StaticResource ErrorTooltipSyle}" />
+            <ToolTip x:Key="IntervalOfGraphPlotValidationErrorTooltip" Style="{StaticResource ErrorTooltipSyle}" />
+            <ToolTip x:Key="MassValidationErrorTooltip" Style="{StaticResource ErrorTooltipSyle}" />
+            <ToolTip x:Key="VelocityValidationErrorTooltip" Style="{StaticResource ErrorTooltipSyle}" />
+
+            <Style BasedOn="{StaticResource AlphabetTextBoxStyle}"
+                   TargetType="TextBox"
+                   x:Key="ErrorAltitudeTextBoxStyle">
+                <Setter Property="local:AltitudeBehaviors.IsAlititude" Value="True" />
+
+                <Style.Triggers>
+                    <DataTrigger Value="False">
+                        <DataTrigger.Binding>
+                            <Binding Converter="{StaticResource StrConverter}"
+                                     Mode="OneWay"
+                                     Path="Tag"
+                                     RelativeSource="{RelativeSource Self}" />
+                        </DataTrigger.Binding>
+                        <Setter Property="TextBox.ToolTip" Value="{StaticResource AltitudeValidationErrorTooltip}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style BasedOn="{StaticResource AlphabetTextBoxStyle}"
+                   TargetType="TextBox"
+                   x:Key="ErrorDiameterTextBoxStyle">
+                <Setter Property="local:DiameterBehaviors.IsDiameter" Value="True" />
+
+                <Style.Triggers>
+                    <DataTrigger Value="False">
+                        <DataTrigger.Binding>
+                            <Binding Converter="{StaticResource StrConverter}"
+                                     Mode="OneWay"
+                                     Path="Tag"
+                                     RelativeSource="{RelativeSource Self}" />
+                        </DataTrigger.Binding>
+                        <Setter Property="TextBox.ToolTip" Value="{StaticResource DiameterValidationErrorTooltip}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style BasedOn="{StaticResource AlphabetTextBoxStyle}"
+                   TargetType="TextBox"
+                   x:Key="ErrorIntervalOfGraphPlotTextBoxStyle">
+                <Setter Property="local:DeltatBehaviors.IsDeltat" Value="True" />
+
+                <Style.Triggers>
+                    <DataTrigger Value="False">
+                        <DataTrigger.Binding>
+                            <Binding Converter="{StaticResource StrConverter}"
+                                     Mode="OneWay"
+                                     Path="Tag"
+                                     RelativeSource="{RelativeSource Self}" />
+                        </DataTrigger.Binding>
+                        <Setter Property="TextBox.ToolTip" Value="{StaticResource IntervalOfGraphPlotValidationErrorTooltip}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style BasedOn="{StaticResource AlphabetTextBoxStyle}"
+                   TargetType="TextBox"
+                   x:Key="ErrorMassTextBoxStyle">
+                <Setter Property="local:MassBehaviors.IsMass" Value="True" />
+
+                <Style.Triggers>
+                    <DataTrigger Value="False">
+                        <DataTrigger.Binding>
+                            <Binding Converter="{StaticResource StrConverter}"
+                                     Mode="OneWay"
+                                     Path="Tag"
+                                     RelativeSource="{RelativeSource Self}" />
+                        </DataTrigger.Binding>
+                        <Setter Property="TextBox.ToolTip" Value="{StaticResource MassValidationErrorTooltip}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style BasedOn="{StaticResource AlphabetTextBoxStyle}"
+                   TargetType="TextBox"
+                   x:Key="ErrorVelocityTextBoxStyle">
+                <Setter Property="local:VelocityBehaviors.IsVelocity" Value="True" />
+
+                <Style.Triggers>
+                    <DataTrigger Value="False">
+                        <DataTrigger.Binding>
+                            <Binding Converter="{StaticResource StrConverter}"
+                                     Mode="OneWay"
+                                     Path="Tag"
+                                     RelativeSource="{RelativeSource Self}" />
+                        </DataTrigger.Binding>
+                        <Setter Property="TextBox.ToolTip" Value="{StaticResource VelocityValidationErrorTooltip}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <ObjectDataProvider x:Key="Detectors" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:BallKind" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </Grid.Resources>
+
+        <Menu VerticalAlignment="Top">
+            <MenuItem Header="ファイル">
+                <MenuItem Command="ApplicationCommands.Close"
+                          Header="終了(_C)"
+                          InputGestureText="Ctrl+C" />
+            </MenuItem>
+
+            <MenuItem Header="設定">
+                <MenuItem Command="Properties"
+                          Header="設定(_T)"
+                          InputGestureText="Ctrl+T" />
+            </MenuItem>
+
+            <MenuItem Header="ヘルプ">
+                <MenuItem Command="ApplicationCommands.Help"
+                          Header="バージョン情報(_A)"
+                          InputGestureText="Ctrl+A" />
+            </MenuItem>
+        </Menu>
+
+        <Grid>
+            <Grid>
+                <!-- 列定義（3列） -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <!-- 行定義（3行） -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="0.15*" />
+                        <RowDefinition Height="0.15*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- 1列目 -->
+                    <DockPanel Grid.Row="0">
+                        <Grid DockPanel.Dock="Top"
+                              HorizontalAlignment="Left"
+                              Margin="0,20,0,0"
+                              Width="413">
+
+                            <!-- 1行目 -->
+                            <GroupBox Header="各種条件" HorizontalAlignment="Left" Width="403">
+                                <Grid>
+                                    <!-- 行定義（5行）-->
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- 1行目 -->
+                                    <StackPanel Grid.Row="0"
+                                            Style="{StaticResource MyStackPanel}">
+                                        <TextBlock Margin="5,0,0,0" 
+                                                   Style="{StaticResource MyTextBlock}"
+                                                   Text="初速（デフォルト：m/s）:"
+                                                   Width="155" />
+                                        <TextBox Margin="0,0,0,0"
+                                                 Style="{StaticResource ErrorVelocityTextBoxStyle}"
+                                                 Tag="{Binding Mode=OneWay, Path=InitialVelocityOfSphereHasError}"
+                                                 Text="{Binding Mode=TwoWay,
+                                                        NotifyOnValidationError=True,
+                                                        Path=InitialVelocityOfSphere,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="SphereOfInitialVelocityTextBox_OnTextChanged"
+                                                 Validation.Error="SphereOfInitialVelocityTextBox_OnError"
+                                                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                                                 Width="80"
+                                                 x:Name="SphereOfInitialVelocityTextBox" />
+                                        <TextBlock Margin="5,0,0,0" 
+                                                   Style="{StaticResource MyTextBlock}"
+                                                   Text="で、"
+                                                   Width="20" />
+                                    </StackPanel>
+
+                                    <!-- 2行目 -->
+                                    <StackPanel Grid.Row="1"
+                                                Style="{StaticResource MyStackPanel}">
+                                        <TextBlock Margin="5,0,0,0" 
+                                                   Style="{StaticResource MyTextBlock}"
+                                                   Text="高度（デフォルト：m）："
+                                                   Width="150" />
+                                        <TextBox Margin="0,0,0,0"
+                                                 Style="{StaticResource ErrorAltitudeTextBoxStyle}"
+                                                 Tag="{Binding Mode=OneWay, Path=InitialAltitudeOfSphereHasError}"
+                                                 Text="{Binding Mode=TwoWay,
+                                                        NotifyOnValidationError=True,
+                                                        Path=InitialAltitudeOfSphere,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="SphereOfInitialAltitudeTextBox_OnTextChanged"
+                                                 Validation.Error="SphereOfInitialAltitudeTextBox_OnError"
+                                                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                                                 Width="80"
+                                                 x:Name="SphereOfInitialAltitudeTextBox" />
+                                        <TextBlock Margin="5,0,0,0" 
+                                                   Style="{StaticResource MyTextBlock}"
+                                                   Text="から投げる"
+                                                   Width="70"
+                                                   x:Name="から落とすから投げるText"/>
+                                    </StackPanel>
+
+                                    <!-- 3行目 -->
+                                    <StackPanel Grid.Row="2"
+                                                Style="{StaticResource MyStackPanel}">
+                                        <TextBlock Margin="5,0,0,0" 
+                                                   Style="{StaticResource MyTextBlock}"
+                                                   Text="球の直径（デフォルト：cm）:"
+                                                   Width="175" />
+                                        <TextBox Margin="0,0,0,0"
+                                                 Style="{StaticResource ErrorDiameterTextBoxStyle}"
+                                                 Tag="{Binding Mode=OneWay, Path=DiameterOfSphereHasError}"
+                                                 Text="{Binding Mode=TwoWay,
+                                                        NotifyOnValidationError=True,
+                                                        Path=DiameterOfSphere,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="SphereOfDiameterTextBox_OnTextChanged"
+                                                 Validation.Error="SphereOfDiameterTextBox_OnError"
+                                                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                                                 Width="80"
+                                                 x:Name="SphereOfDiameterTextBox" />
+                                    </StackPanel>
+
+                                    <!-- 4行目 -->
+                                    <StackPanel Grid.Row="3"
+                                                Style="{StaticResource MyStackPanel}">
+                                        <TextBlock Margin="5,0,0,0" 
+                                                   Style="{StaticResource MyTextBlock}"
+                                                   Text="球の質量（デフォルト：g）:"
+                                                   Width="165" />
+                                        <TextBox Margin="0,0,0,0"
+                                                 Style="{StaticResource ErrorMassTextBoxStyle}"
+                                                 Tag="{Binding Mode=OneWay, Path=MassOfSphereHasError}"
+                                                 Text="{Binding Mode=TwoWay,
+                                                        NotifyOnValidationError=True,
+                                                        Path=MassOfSphere,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="SphereOfMassTextBox_OnTextChanged"
+                                                 Validation.Error="SphereOfMassTextBox_OnError"
+                                                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                                                 Width="80"
+                                                 x:Name="SphereOfMassTextBox" />
+                                    </StackPanel>
+
+                                    <!-- 5行目 -->
+                                    <StackPanel Grid.Row="4"
+                                                Style="{StaticResource MyStackPanel}">
+                                        <TextBlock Margin="5,0,0,0" 
+                                                   Style="{StaticResource MyTextBlock}"
+                                                   Text="計算結果をグラフにプロットする際の時間間隔（秒）:"
+                                                   Width="300" />
+                                        <TextBox Margin="0,0,0,0"
+                                                 Style="{StaticResource ErrorIntervalOfGraphPlotTextBoxStyle}"
+                                                 Tag="{Binding Mode=OneWay, Path=IntervalOfGraphPlotHasError}"
+                                                 Text="{Binding Mode=TwoWay,
+                                                        NotifyOnValidationError=True,
+                                                        Path=IntervalOfGraphPlot,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="IntervalOfGraphPlotTextBox_OnTextChanged"
+                                                 Validation.Error="IntervalOfGraphPlotTextBox_OnError"
+                                                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                                                 Width="80"
+                                                 x:Name="IntervalOfGraphPlotTextBox" />
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </DockPanel>
+
+                    <!-- 2行目 -->
+                    <StackPanel Grid.Row="1"
+                                Style="{StaticResource MyStackPanel}">
+                        <TextBlock Margin="10,0,0,0" 
+                                   Style="{StaticResource MyTextBlock}"
+                                   Text="球を指定："
+                                   Width="70" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource Detectors}}"
+                                  Margin="0,0,0,0"
+                                  SelectedIndex="0"
+                                  SelectionChanged="ボールの種類ComboBox_OnSelectionChanged"
+                                  Style="{StaticResource MyComboBox}"
+                                  x:Name="ボールの種類ComboBox"/>
+                    </StackPanel>
+
+                    <!-- 3行目 -->
+                    <StackPanel Grid.Row="2"
+                            Style="{StaticResource MyStackPanel}">
+                        <Button Click="計算開始キャンセルButton_Click"
+                                Content="計算開始"
+                                Margin="10,0,0,0"
+                                Style="{StaticResource MyButton}"
+                                x:Name="計算開始キャンセルButton"/>
+                    </StackPanel>
+
+                    <!-- 4行目 -->
+                    <GroupBox Grid.Row="3"
+                              Header="計算結果"
+                              Margin="0,0,10,0">
+                        <Grid>
+                            <!-- 行定義（5行）-->
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- 1行目 -->
+                            <StackPanel Grid.Row="0"
+                                    Style="{StaticResource MyStackPanel}">
+                                <TextBlock Margin="15,0,0,0"
+                                       Style="{StaticResource MyTextBlock}"
+                                       Text="計算所要時間："
+                                       x:Name="CalculationRequiredTimeText" />
+                            </StackPanel>
+
+                            <!-- 2行目 -->
+                            <StackPanel Grid.Row="1"
+                                    Style="{StaticResource MyStackPanel}">
+                                <TextBlock Margin="15,0,0,0"
+                                       Style="{StaticResource MyTextBlock}"
+                                       Text="最高速度："
+                                       x:Name="MaximumVelocityText" />
+                            </StackPanel>
+
+                            <!-- 3行目 -->
+                            <StackPanel Grid.Row="2"
+                                    Style="{StaticResource MyStackPanel}">
+                                <TextBlock Margin="15,0,0,0"
+                                       Style="{StaticResource MyTextBlock}"
+                                       Text="最高到達高度："
+                                       x:Name="MaximumReachableAltitudeText" />
+                            </StackPanel>
+
+                            <!-- 4行目 -->
+                            <StackPanel Grid.Row="3"
+                                        Style="{StaticResource MyStackPanel}">
+                                <TextBlock Margin="15,0,0,0"
+                                           Style="{StaticResource MyTextBlock}"
+                                           Text=""
+                                           x:Name="CalculateResultText" />
+                            </StackPanel>
+
+                            <!-- 5行目（ダミー） -->
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <!-- 2列目 -->
+                <DockPanel Grid.Column="1">
+                    <Grid DockPanel.Dock="Top"
+                          HorizontalAlignment="Left"
+                          Margin="0,20,0,0"
+                          Width="490">
+
+                        <oxy:PlotView Model="{Binding Mode=OneWay, Path=TvsAltitudePlotModel}"
+                                      x:Name="TvsAltitudePlotView" />
+                    </Grid>
+                </DockPanel>
+
+                <!-- 3列目 -->
+                <DockPanel Grid.Column="2">
+                    <Grid DockPanel.Dock="Top"
+                          HorizontalAlignment="Left"
+                          Margin="0,20,0,0"
+                          Width="490">
+
+                        <oxy:PlotView Model="{Binding Mode=OneWay, Path=TvsVelocityPlotModel}"
+                                      x:Name="TvsVelocityPlotView" />
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

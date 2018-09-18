@@ -1,0 +1,61 @@
+﻿<Window Height="200"
+        Icon="Images/Freefall.ico"
+        Title="バージョン情報"
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Freefall.VersionInformationWindow">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/MyStyle.xaml" />
+
+                <ResourceDictionary>
+                    <BitmapImage x:Key="MyImage">
+                        <BitmapImage.UriSource>
+                            Images/Freefall.bmp
+                        </BitmapImage.UriSource>
+                    </BitmapImage>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <StackPanel Grid.Column="0"
+                    Style="{StaticResource MyStackPanel}">
+            <Image Height="128"
+                   Source="{StaticResource MyImage}" 
+                   Stretch="Uniform"
+                   VerticalAlignment="Center"
+                   Width="128" />
+            <StackPanel VerticalAlignment="Center"
+                        Margin="0,25,0,0">
+                <TextBlock FontSize="13"
+                           Margin="0,5,0,5"
+                           Style="{StaticResource MyTextBlock}"
+                           Text="Freefall ver.0.1" />
+                <TextBlock FontSize="13"
+                           Style="{StaticResource MyTextBlock}"
+                           Text="Copyright © 2018 @dc1394 All Rights Reserved." />
+                <TextBlock HorizontalAlignment="Center"
+                           Margin="0,10,0,0" 
+                           Style="{StaticResource MyTextBlock}"
+                           Text="バグ、ご質問等の連絡先"/>
+                <TextBlock Style="{StaticResource MyTextBlock}">Twitter: 
+                    <Hyperlink NavigateUri="https://twitter.com/dc1394"
+                               RequestNavigate="Hyperlink_RequestNavigate">
+                               @dc1394
+                    </Hyperlink>
+                </TextBlock>
+                <Button Click="OpenTextFileButton_Click"
+                        Content="readme.txtを見る"
+                        Margin="0,15,0,0"
+                        Style="{StaticResource MyButton}"
+                        Width="130"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

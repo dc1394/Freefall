@@ -86,7 +86,7 @@ module DefaultData =
             /// <summary>
             /// デフォルトの球の速度（m）
             /// </summary>
-            static member DefaultInitialVelocityOfSphere = "10km/s"
+            static member DefaultInitialVelocityOfSphere = "11.2km/s"
             
             /// <summary>
             // デフォルトの球の質量

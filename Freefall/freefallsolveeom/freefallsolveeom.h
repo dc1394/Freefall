@@ -340,7 +340,7 @@ namespace freefallsolveeom {
         /*!
             CSVファイル出力用の0判定用の定数
         */
-        static auto constexpr ZERODECISIONTOCSV = 1.0E-10;
+        static auto constexpr ZERODECISIONTOCSV = 1.0E-7;
 
         //! A private static member variable (constant).
         /*!
@@ -405,7 +405,7 @@ namespace freefallsolveeom {
             最初のステップかどうか
         */
         bool isfirststep_ = true;
-
+        
         //! A private member variable (constant).
         /*!
             物体の角運動量Lの2乗を質量mの2乗で割り、北緯45度地点に修正した定数（m⁴s¯²）
@@ -501,7 +501,13 @@ namespace freefallsolveeom {
             CSVファイル出力用の時間間隔（秒）
         */
         std::optional<double> const tintervaloutputcsv_;
-                
+
+        //! A private member variable.
+        /*!
+            tintervalgraphplot_より、tintervaloutputcsvの方が大きいかどうか
+        */
+        std::optional<bool> const islargertintervaloutputcsv_;
+
         //! A private member variable (constant).
         /*!
             初期速度（m/s）

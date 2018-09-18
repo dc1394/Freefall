@@ -350,6 +350,7 @@
                                   SelectedIndex="0"
                                   SelectionChanged="ボールの種類ComboBox_OnSelectionChanged"
                                   Style="{StaticResource MyComboBox}"
+                                  Width="115"
                                   x:Name="ボールの種類ComboBox"/>
                     </StackPanel>
 

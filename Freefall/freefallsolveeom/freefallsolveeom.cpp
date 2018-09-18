@@ -36,6 +36,7 @@ namespace freefallsolveeom {
         spline_temperature_(nullptr, gsl_spline_deleter),
         tintervalgraphplot_(tintervalgraphplot),
         tintervaloutputcsv_(std::nullopt),
+        islargertintervaloutputcsv_(std::nullopt),
         v0_(v0),
 		x_({ R0 + h0, v0 })
     {
@@ -52,13 +53,14 @@ namespace freefallsolveeom {
         l2divm2northlatitude45_(sqr(sqr(FreefallSolveEom::R0 + h0) * 2.0 * pi<double>() / (24.0 * 60.0 * 60.0)) * std::cos(pi<double>() * 0.25)),
         m_(m),
         ode_solver_type_(ode_solver_type),
-        outputtocsvdigits_(std::to_string(static_cast<std::int32_t>(std::ceil(std::log10(1.0 / tintervaloutputcsv))))),
+        outputtocsvdigits_(std::to_string(static_cast<std::int32_t>(std::ceil(std::log10(tintervaloutputcsv) <= -1.0 ? -std::log10(tintervaloutputcsv) : 1.0)))),
         r_(r),
         spherevolume_(4.0 / 3.0 * boost::math::constants::pi<double>() * r * r * r),
         spline_pressure_(nullptr, gsl_spline_deleter),
         spline_temperature_(nullptr, gsl_spline_deleter),
         tintervalgraphplot_(tintervalgraphplot),
         tintervaloutputcsv_(std::make_optional(tintervaloutputcsv)),
+        islargertintervaloutputcsv_(std::make_optional(tintervalgraphplot <= tintervaloutputcsv)),
         v0_(v0),
         x_({ R0 + h0, v0 })
     {
@@ -542,6 +544,7 @@ namespace freefallsolveeom {
             }
 
             if (tintervaloutputcsv_ &&
+                !(*islargertintervaloutputcsv_) &&
                 (std::fabs(ttmp / *tintervaloutputcsv_ - std::floor(ttmp / *tintervaloutputcsv_)) <= FreefallSolveEom::ZERODECISIONTOCSV || std::fabs(ttmp / *tintervaloutputcsv_ - std::ceil(ttmp / *tintervaloutputcsv_)) <= FreefallSolveEom::ZERODECISIONTOCSV))
             {
                 outputresulttocsv(t_ + ttmp, x_);
@@ -549,6 +552,13 @@ namespace freefallsolveeom {
         }
 
         t_ += tintervalgraphplot_;
+
+        if (tintervaloutputcsv_ &&
+            *islargertintervaloutputcsv_ &&
+            (std::fabs(t_ / *tintervaloutputcsv_ - std::floor(t_ / *tintervaloutputcsv_)) <= FreefallSolveEom::ZERODECISIONTOCSV || std::fabs(t_ / *tintervaloutputcsv_ - std::ceil(t_ / *tintervaloutputcsv_)) <= FreefallSolveEom::ZERODECISIONTOCSV))
+        {
+            outputresulttocsv(t_, x_);
+        }
 
         return x_;
     }

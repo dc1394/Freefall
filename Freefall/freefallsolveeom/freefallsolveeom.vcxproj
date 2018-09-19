@@ -161,8 +161,8 @@
       <AdditionalDependencies>gsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\Release\freefallsolveeom.dll ..\..\Freefall\bin\x86\Release
-copy ..\Document\readme.txt ..\..\Freefall\bin\x86\Release</Command>
+      <Command>copy ..\..\Release\freefallsolveeom.dll ..\bin\x86\Release
+copy ..\Document\readme.txt ..\bin\x86\Release</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -192,8 +192,8 @@ copy ..\Document\readme.txt ..\..\Freefall\bin\x86\Release</Command>
       <AdditionalDependencies>gsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\x64\Release\freefallsolveeom.dll ..\..\Freefall\bin\x64\Release
-copy ..\Document\readme.txt ..\..\Freefall\bin\x64\Release</Command>
+      <Command>copy ..\..\x64\Release\freefallsolveeom.dll ..\bin\x64\Release
+copy ..\Document\readme.txt ..\bin\x64\Release</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

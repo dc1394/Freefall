@@ -855,34 +855,31 @@ namespace Freefall
             }
 
             var sd = this.sdm.SaveData;
+           
+            sd.IntervalOfGraphPlot =
+                String.IsNullOrEmpty(this.mwvm.IntervalOfGraphPlotHasError)
+                    ? this.IntervalOfGraphPlotTextBox.Text
+                    : DefaultData.DefaultDataDefinition.DefaultIntervalOfGraphPlot;
 
-            if (this.mwvm != null)
-            {
-                sd.IntervalOfGraphPlot =
-                    String.IsNullOrEmpty(this.mwvm.IntervalOfGraphPlotHasError)
-                        ? this.IntervalOfGraphPlotTextBox.Text
-                        : DefaultData.DefaultDataDefinition.DefaultIntervalOfGraphPlot;
+            sd.DiameterOfSphere =
+                String.IsNullOrEmpty(this.mwvm.DiameterOfSphereHasError)
+                    ? this.SphereOfDiameterTextBox.Text
+                    : DefaultData.DefaultDataDefinition.DefaultDiameterOfSphere;
 
-                sd.DiameterOfSphere =
-                    String.IsNullOrEmpty(this.mwvm.DiameterOfSphereHasError)
-                        ? this.SphereOfDiameterTextBox.Text
-                        : DefaultData.DefaultDataDefinition.DefaultDiameterOfSphere;
+            sd.InitialAltitudeOfSphere =
+                String.IsNullOrEmpty(this.mwvm.InitialAltitudeOfSphereHasError)
+                    ? this.SphereOfInitialAltitudeTextBox.Text
+                    : DefaultData.DefaultDataDefinition.DefaultInitialAltitudeOfSphere;
 
-                sd.InitialAltitudeOfSphere =
-                    String.IsNullOrEmpty(this.mwvm.InitialAltitudeOfSphereHasError)
-                        ? this.SphereOfInitialAltitudeTextBox.Text
-                        : DefaultData.DefaultDataDefinition.DefaultInitialAltitudeOfSphere;
+            sd.InitialVelocityOfSphere =
+                String.IsNullOrEmpty(this.mwvm.InitialVelocityOfSphereHasError)
+                    ? this.SphereOfInitialVelocityTextBox.Text
+                    : DefaultData.DefaultDataDefinition.DefaultInitialVelocityOfSphere;
 
-                sd.InitialVelocityOfSphere =
-                    String.IsNullOrEmpty(this.mwvm.InitialVelocityOfSphereHasError)
-                        ? this.SphereOfInitialVelocityTextBox.Text
-                        : DefaultData.DefaultDataDefinition.DefaultInitialVelocityOfSphere;
-
-                sd.MassOfSphere =
-                    String.IsNullOrEmpty(this.mwvm.MassOfSphereHasError)
-                        ? this.SphereOfMassTextBox.Text
-                        : DefaultData.DefaultDataDefinition.DefaultMassofSphere;
-            }
+            sd.MassOfSphere =
+                String.IsNullOrEmpty(this.mwvm.MassOfSphereHasError)
+                    ? this.SphereOfMassTextBox.Text
+                    : DefaultData.DefaultDataDefinition.DefaultMassofSphere;
 
             sd.BallKindComboBoxItem = (DefaultData.BallKind)this.ボールの種類ComboBox.SelectedIndex;
 

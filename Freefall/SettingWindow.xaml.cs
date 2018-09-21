@@ -3,6 +3,10 @@
 //     Copyright © 2018 @dc1394 All Rights Reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Freefall
 {
     using System;
@@ -47,8 +51,48 @@ namespace Freefall
 
         #endregion 構築
 
+        #region メソッド
+
+        /// <summary>
+        /// テキストボックスのエラーが解決されたときに「OK」ボタンを有効にする
+        /// </summary>
+        private void TextBoxOnError解除Button有効無効()
+        {
+            if (this.swvm.OdeSolver == DefaultData.OdeSolverType.ADAMS_BASHFORTH_MOULTON &&
+                (this.IsOutputToCsvFileCheckBox.IsChecked ?? false) &&
+                this.swvm.GetErrors("DeltatOfOdeSolver") == null &&
+                this.swvm.GetErrors("IntervalOfOutputToCsvFile") == null)
+            {
+                this.OkButton.IsEnabled = true;
+            }
+            else if (this.swvm.OdeSolver == DefaultData.OdeSolverType.ADAMS_BASHFORTH_MOULTON &&
+                     !(this.IsOutputToCsvFileCheckBox.IsChecked ?? false) &&
+                     this.swvm.GetErrors("DeltatOfOdeSolver") == null)
+            {
+                this.OkButton.IsEnabled = true;
+            }
+            else if (this.swvm.OdeSolver != DefaultData.OdeSolverType.ADAMS_BASHFORTH_MOULTON &&
+                     !(this.IsOutputToCsvFileCheckBox.IsChecked ?? false) &&
+                     this.swvm.GetErrors("DeltatOfOdeSolver") == null &&
+                     this.swvm.GetErrors("EpsOfSolveOde") == null)
+            {
+                this.OkButton.IsEnabled = true;
+            }
+            else if (this.swvm.OdeSolver != DefaultData.OdeSolverType.ADAMS_BASHFORTH_MOULTON &&
+                     (this.IsOutputToCsvFileCheckBox.IsChecked ?? false))
+            {
+                UtilityFunc.TextBoxOnError解除Button有効(this.OkButton, this.swvm);
+            }
+            else
+            {
+                this.OkButton.IsEnabled = false;
+            }
+        }
+
+        #endregion メソッド
+
         #region イベントハンドラ
-        
+
         /// <summary>
         /// 「キャンセル」ボタンをクリックしたとき呼ばれるイベントハンドラ
         /// </summary>
@@ -68,6 +112,27 @@ namespace Freefall
         {
             this.swvm.DeltatOfOdeSolverHasError =
                 UtilityFunc.TextBoxOnErrorButton無効(this.OkButton, "DeltatOfOdeSolver", this.swvm);
+        }
+        
+        /// <summary>
+        /// 「EpsOfSolveOdeTextBox」がエラーを検知したときに呼ばれるイベントハンドラ
+        /// </summary>
+        /// <param name="sender">The parameter is not used.</param>
+        /// <param name="e">The parameter is not used.</param>
+        private void EpsOfSolveOdeTextBox_OnError(object sender, ValidationErrorEventArgs e)
+        {
+            this.swvm.EpsOfSolveOdeHasError =
+                UtilityFunc.TextBoxOnErrorButton無効(this.OkButton, "EpsOfSolveOde", this.swvm);
+        }
+
+        /// <summary>
+        /// 「EpsOfSolveOdeTextBox」のテキストが変更されたとき呼ばれるイベントハンドラ
+        /// </summary>
+        /// <param name="sender">The parameter is not used.</param>
+        /// <param name="e">The parameter is not used.</param>
+        private void EpsOfSolveOdeTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.TextBoxOnError解除Button有効無効();
         }
 
         /// <summary>
@@ -114,7 +179,7 @@ namespace Freefall
         /// <param name="e">The parameter is not used.</param>
         private void DeltatOfOdeSolverTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            UtilityFunc.TextBoxOnError解除Button有効(this.OkButton, this.swvm);
+            this.TextBoxOnError解除Button有効無効();
         }
         
         /// <summary>
@@ -135,7 +200,7 @@ namespace Freefall
         /// <param name="e">The parameter is not used.</param>
         private void IntervalOfOutputToCsvFileTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            UtilityFunc.TextBoxOnError解除Button有効(this.OkButton, this.swvm);
+            this.TextBoxOnError解除Button有効無効();
         }
 
         /// <summary>
@@ -148,6 +213,13 @@ namespace Freefall
             this.IntervalOfOutputToCsvFileTextBox.IsEnabled = true;
             this.CsvFileNameFullPathTextBox.IsEnabled = true;
             this.参照Button.IsEnabled = true;
+
+            // ヴァリデーション有効
+            Validation.SetErrorTemplate(
+                this.IntervalOfOutputToCsvFileTextBox,
+                this.Resources["ValidationTemplate"] as ControlTemplate);
+
+            this.TextBoxOnError解除Button有効無効();
         }
 
         /// <summary>
@@ -160,6 +232,11 @@ namespace Freefall
             this.IntervalOfOutputToCsvFileTextBox.IsEnabled = false;
             this.CsvFileNameFullPathTextBox.IsEnabled = false;
             this.参照Button.IsEnabled = false;
+            
+            // ヴァリデーション無効
+            Validation.SetErrorTemplate(this.IntervalOfOutputToCsvFileTextBox, null);
+
+            this.TextBoxOnError解除Button有効無効();
         }
 
         /// <summary>
@@ -169,17 +246,22 @@ namespace Freefall
         /// <param name="e">The parameter is not used.</param>
         private void OkButtonOnClick(object sender, RoutedEventArgs e)
         {
-            this.sd.CsvFileNameFullPath = this.swvm.CsvFileNameFullPath;
-
             this.sd.DeltatOfOdeSolver = this.swvm.DeltatOfOdeSolver;
-
-            this.sd.EpsOfSolveOde = this.swvm.EpsOfSolveOde;
-
-            this.sd.IntervalOfOutputToCsvFile = this.swvm.IntervalOfOutputToCsvFile;
-
+            
             this.sd.IsOutputToCsvFile = this.IsOutputToCsvFileCheckBox.IsChecked ?? false;
             
             this.sd.OdeSolver = this.swvm.OdeSolver;
+
+            if (this.sd.OdeSolver != DefaultData.OdeSolverType.ADAMS_BASHFORTH_MOULTON)
+            {
+                this.sd.EpsOfSolveOde = this.swvm.EpsOfSolveOde;
+            }
+
+            if (this.IsOutputToCsvFileCheckBox.IsChecked ?? false)
+            {
+                this.sd.CsvFileNameFullPath = this.swvm.CsvFileNameFullPath;
+                this.sd.IntervalOfOutputToCsvFile = this.swvm.IntervalOfOutputToCsvFile;
+            }
 
             this.Close();
         }
@@ -211,27 +293,6 @@ namespace Freefall
         }
 
         /// <summary>
-        /// 「SolveOdeEpsTextBox」がエラーを検知したときに呼ばれるイベントハンドラ
-        /// </summary>
-        /// <param name="sender">The parameter is not used.</param>
-        /// <param name="e">The parameter is not used.</param>
-        private void SolveOdeEpsTextBox_OnError(object sender, ValidationErrorEventArgs e)
-        {
-            this.swvm.SolveOdeEpsHasError =
-                UtilityFunc.TextBoxOnErrorButton無効(this.OkButton, "EpsOfSolveOde", this.swvm);
-        }
-
-        /// <summary>
-        /// 「SolveOdeEpsTextBox」のテキストが変更されたとき呼ばれるイベントハンドラ
-        /// </summary>
-        /// <param name="sender">The parameter is not used.</param>
-        /// <param name="e">The parameter is not used.</param>
-        private void SolveOdeEpsTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            UtilityFunc.TextBoxOnError解除Button有効(this.OkButton, this.swvm);
-        }
-
-        /// <summary>
         /// ラジオボタンが変更されたとき呼ばれるイベントハンドラ
         /// </summary>
         /// <param name="sender">The parameter is not used.</param>
@@ -241,12 +302,26 @@ namespace Freefall
             switch (this.swvm.OdeSolver)
             {
                 case DefaultData.OdeSolverType.ADAMS_BASHFORTH_MOULTON:
-                    this.SolveOdeEpsTextBox.IsEnabled = false;
+                    this.EpsOfSolveOdeTextBox.IsEnabled = false;
+                    
+                    // ヴァリデーション無効
+                    Validation.SetErrorTemplate(this.EpsOfSolveOdeTextBox, null);
+
+                    this.TextBoxOnError解除Button有効無効();
+
                     return;
 
                 case DefaultData.OdeSolverType.BULIRSCH_STOER:
                 case DefaultData.OdeSolverType.CONTROLLED_RUNGE_KUTTA:
-                    this.SolveOdeEpsTextBox.IsEnabled = true;
+                    this.EpsOfSolveOdeTextBox.IsEnabled = true;
+
+                    // ヴァリデーション有効
+                    Validation.SetErrorTemplate(
+                        this.EpsOfSolveOdeTextBox,
+                        this.Resources["ValidationTemplate"] as ControlTemplate);
+
+                    this.TextBoxOnError解除Button有効無効();
+
                     return;
 
                 default:

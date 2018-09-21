@@ -77,7 +77,7 @@
 
             <Style BasedOn="{StaticResource AlphabetTextBoxStyle}"
                    TargetType="TextBox"
-                   x:Key="ErrorSolveOdeEpsTextBoxStyle">
+                   x:Key="ErrorEpsOfSolveOdeTextBoxStyle">
                 <Setter Property="local:DeltatBehaviors.IsDeltat" Value="True" />
 
                 <Style.Triggers>
@@ -171,17 +171,17 @@
                        Text="常微分方程式の数値解法の許容誤差（Adams-Bashforth-Moulton法では無効）："
                        Width="492" />
             <TextBox Margin="0,0,0,0"
-                     Style="{StaticResource ErrorSolveOdeEpsTextBoxStyle}"
-                     Tag="{Binding Mode=OneWay, Path=SolveOdeEpsHasError}"
+                     Style="{StaticResource ErrorEpsOfSolveOdeTextBoxStyle}"
+                     Tag="{Binding Mode=OneWay, Path=EpsOfSolveOdeHasError}"
                      Text="{Binding Mode=TwoWay,
                                     NotifyOnValidationError=True,
                                     Path=EpsOfSolveOde,
                                     UpdateSourceTrigger=PropertyChanged}"
-                     TextChanged="SolveOdeEpsTextBox_OnTextChanged"
-                     Validation.Error="SolveOdeEpsTextBox_OnError"
+                     TextChanged="EpsOfSolveOdeTextBox_OnTextChanged"
+                     Validation.Error="EpsOfSolveOdeTextBox_OnError"
                      Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
                      Width="80"
-                     x:Name="SolveOdeEpsTextBox" />
+                     x:Name="EpsOfSolveOdeTextBox" />
         </StackPanel>
 
         <!-- 3行目 -->

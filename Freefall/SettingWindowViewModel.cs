@@ -37,6 +37,11 @@ namespace Freefall
         private String epsOfSolveOde;
 
         /// <summary>
+        /// 常微分方程式の数値解法の許容誤差のエラー文字列
+        /// </summary>
+        private String epsOfSolveOdeHasError;
+
+        /// <summary>
         /// 計算結果をCSVファイルに出力する際の時間間隔（秒）
         /// </summary>
         private String intervalOfOutputToCsvFile;
@@ -50,11 +55,6 @@ namespace Freefall
         /// 常微分方程式の数値解法
         /// </summary>
         private DefaultData.OdeSolverType odeSolver;
-
-        /// <summary>
-        /// 常微分方程式の数値解法の許容誤差のエラー文字列
-        /// </summary>
-        private String solveOdeEpsHasError;
 
         #endregion フィールド
 
@@ -111,6 +111,16 @@ namespace Freefall
                 this.ValidateProperty("EpsOfSolveOde", value);
             }
         }
+        
+        /// <summary>
+        /// 常微分方程式の数値解法の許容誤差のエラー文字列
+        /// </summary>
+        public String EpsOfSolveOdeHasError
+        {
+            get => this.epsOfSolveOdeHasError;
+
+            internal set => this.SetProperty(ref this.epsOfSolveOdeHasError, value);
+        }
 
         /// <summary>
         /// 計算結果をCSVファイルに出力する際の時間間隔（秒）
@@ -163,16 +173,6 @@ namespace Freefall
             get => this.odeSolver;
 
             set => this.SetProperty(ref this.odeSolver, value);
-        }
-
-        /// <summary>
-        /// 常微分方程式の数値解法の許容誤差のエラー文字列
-        /// </summary>
-        public String SolveOdeEpsHasError
-        {
-            get => this.solveOdeEpsHasError;
-
-            internal set => this.SetProperty(ref this.solveOdeEpsHasError, value);
         }
 
         #endregion プロパティ

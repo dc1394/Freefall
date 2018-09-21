@@ -81,7 +81,7 @@ namespace Freefall
         /// <summary>
         /// 0判断用の定数
         /// </summary>
-        internal static readonly Double ZeroDecision = 1.0E-10;
+        internal static readonly Double ZeroDecision = 1.0E-9;
 
         #endregion フィールド
 

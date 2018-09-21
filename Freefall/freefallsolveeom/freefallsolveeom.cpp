@@ -551,7 +551,8 @@ namespace freefallsolveeom {
             }
         }
 
-        t_ += tintervalgraphplot_;
+        cnt_++;
+        t_ = static_cast<double>(cnt_) * tintervalgraphplot_;
 
         if (tintervaloutputcsv_ &&
             *islargertintervaloutputcsv_ &&
@@ -559,7 +560,7 @@ namespace freefallsolveeom {
         {
             outputresulttocsv(t_, x_);
         }
-
+                
         return x_;
     }
 

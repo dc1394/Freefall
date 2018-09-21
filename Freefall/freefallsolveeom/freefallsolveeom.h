@@ -340,7 +340,7 @@ namespace freefallsolveeom {
         /*!
             CSVファイル出力用の0判定用の定数
         */
-        static auto constexpr ZERODECISIONTOCSV = 1.0E-10;
+        static auto constexpr ZERODECISIONTOCSV = 1.0E-11;
 
         //! A private static member variable (constant).
         /*!
@@ -357,6 +357,12 @@ namespace freefallsolveeom {
             gsl_interp_accelへのスマートポインタ
         */
         std::unique_ptr<gsl_interp_accel, decltype(gsl_interp_accel_deleter)> const acc_;
+
+        //! A private member variable.
+        /*!
+            時間のカウント
+        */
+        double cnt_ = 0;
 
         //! A private member variable (constant).
         /*!

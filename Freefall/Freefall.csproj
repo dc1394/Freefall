@@ -129,7 +129,6 @@
     <Compile Include="DiameterBehaviors.cs" />
     <Compile Include="FreefallSolveEom.cs" />
     <Compile Include="MassBehaviors.cs" />
-    <Compile Include="NumericBehaviors.cs" />
     <Compile Include="SettingWindowViewModel.cs" />
     <Compile Include="StringToBooleanConverter.cs" />
     <Compile Include="UnsafeNativeMethods.cs" />

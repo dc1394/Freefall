@@ -14,7 +14,7 @@ namespace Freefall
     /// <summary>
     /// 空気抵抗のある自由落下系に対して運動方程式を1ステップ解くクラス
     /// </summary>
-    internal class FreefallSolveEom
+    internal sealed class FreefallSolveEom
     {
         #region フィールド
 

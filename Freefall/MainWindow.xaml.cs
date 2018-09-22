@@ -93,6 +93,11 @@ namespace Freefall
         private readonly LineSeries altitudeLineSeries = new LineSeries() { Color = OxyColors.Red };
 
         /// <summary>
+        /// 経過時間－速度グラフのプロット用の LineSeries
+        /// </summary>
+        private readonly LineSeries velocityLineSeries = new LineSeries();
+
+        /// <summary>
         /// 処理をキャンセルする場合のトークン
         /// </summary>
         private CancellationTokenSource cts;
@@ -133,7 +138,7 @@ namespace Freefall
         private readonly SaveDataManage.SaveDataManage sdm = new SaveDataManage.SaveDataManage();
 
         /// <summary>
-        /// 外気圏を脱出した際の時間（秒）と速度とその時に第二宇宙速度を超えていたかどうか
+        /// 外気圏を脱出した際の時間（秒）と速度（m/s）とその時に第二宇宙速度を超えていたかどうか
         /// </summary>
         private (Double texosphere, Double vexosphere, Boolean issecondescape)? stateofexosphere;
 
@@ -153,7 +158,7 @@ namespace Freefall
         private (Double, Double, Double)? stateofvmax;
 
         /// <summary>
-        /// 経過時間
+        /// 経過時間（秒）
         /// </summary>
         private Double t;
 
@@ -166,11 +171,6 @@ namespace Freefall
         /// 速度（m/s or km/s）
         /// </summary>
         private Double v;
-
-        /// <summary>
-        /// 経過時間－速度グラフのプロット用の LineSeries
-        /// </summary>
-        private readonly LineSeries velocityLineSeries = new LineSeries();
 
         /// <summary>
         /// 経過時間－高度の関係のグラフの縦軸の単位をkmに変更したかどうかのフラグ
@@ -585,8 +585,6 @@ namespace Freefall
                     break;
 
                 case "kg":
-                    break;
-
                 case "":
                     break;
 
@@ -602,13 +600,11 @@ namespace Freefall
                     d *= 0.01;
                     break;
 
-                case "m":
-                    break;
-
                 case "mm":
                     d *= 0.001;
                     break;
 
+                case "m":
                 case "":
                     break;
 
@@ -628,8 +624,6 @@ namespace Freefall
                     break;
 
                 case "m":
-                    break;
-
                 case "":
                     break;
 
@@ -654,8 +648,6 @@ namespace Freefall
                     break;
 
                 case "m/s":
-                    break;
-
                 case "":
                     break;
 
@@ -738,6 +730,9 @@ namespace Freefall
 
             // Open the dialog box modally
             ew.ShowDialog();
+
+            // IntervalOfGraphPlotTextBoxのテキストをView側に通知
+            this.mwvm.IntervalOfGraphPlot = this.IntervalOfGraphPlotTextBox.Text;
         }
 
         /// <summary>

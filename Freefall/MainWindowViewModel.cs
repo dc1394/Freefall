@@ -250,7 +250,7 @@ namespace Freefall
                     }
 
                     var dtdiv = dtgraphplot / dtodesolver;
-                    if (dtdiv - Math.Floor(dtdiv) > UtilityFunc.ZeroDecision)
+                    if (Math.Abs(dtdiv - Math.Round(dtdiv)) > UtilityFunc.ZeroDecision && Math.Abs(dtdiv - Math.Ceiling(dtdiv)) > UtilityFunc.ZeroDecision)
                     {
                         this.AddError("IntervalOfGraphPlot", "グラフプロットの際の時間間隔の値は、常微分方程式の数値解法用の時間刻みΔtの整数倍でなければなりません");
                     }

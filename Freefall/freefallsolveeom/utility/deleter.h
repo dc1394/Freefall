@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <gsl/gsl_spline.h>    // for gsl_interp_accel, gsl_interp_accel_free, gsl_spline, gsl_spline_free
+#include <gsl/gsl_spline.h>     // for gsl_interp_accel, gsl_interp_accel_free, gsl_spline, gsl_spline_free
 
 namespace freefallsolveeom {
     //! A lambda expression.
